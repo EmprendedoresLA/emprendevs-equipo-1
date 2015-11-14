@@ -1,12 +1,13 @@
 module.exports = function(Idea) {
 
 	var TreeModel = require('tree-model');
+	var tree = new TreeModel();
 	var async = require	('async');
 	var _ = require('lodash');
- 
+ 	
 
  	//Devuelve una idea con sus steps completos
-	Idea.openIdea= function(ideaId,cb){
+	Idea.openIdea = function(ideaId,cb){
 
 		Idea.fullFill(ideaId,function(err,fullIdea){
 			return fullIdea;
@@ -20,13 +21,15 @@ module.exports = function(Idea) {
 	Idea.getUserIdeas = function(userId,cb){
 		Idea.find({
 				where:{
-						owner:userId
+						userId:userId
 				},
 				filter:{
 					user:true,
 					id:true,
 					name:true,
-					createdAt:true
+					createdAt:true,
+					tree:false
+
 				}
 			},function(err,res){
 				if(err)
@@ -36,9 +39,17 @@ module.exports = function(Idea) {
 		
 	}
 
+	Idea.createTreeObject = function createTreeModel(ideaId,cb){
+
+		Idea.findById(ideaId,function(err,res){
+			var ideaTreeObject = tree.parse(res);			
+			return cb(null,ideaTreeObject);
+		});
+	}
+
 	
 	//AVOID CALLBACK HELL, USE ASYNC
-	 Idea.reparentStep = function reparentStep(ideaObject,stepId, newParentId,cb){
+	 Idea.reparentStep = function reparentStep(ideaId,stepId, newParentId,cb){
 
 	 	var step = {};
 	 	var newParent = {};
@@ -116,6 +127,7 @@ module.exports = function(Idea) {
 	// para cambiar el orden de los nodos dentro de un objeto TreeModel
 	// se manda el root, y los objetos a ser cambiados de lugar
 	Idea.changeStepOrder = function changeStepOrder(root,stepChildA,stepChildB,cb){
+
 
 
 		var childrens = root.model.tree;
@@ -200,7 +212,7 @@ var recursiveSearch = function recursiveSearch(treeProperty,property, listIds) {
 		     ],
 		     returns: { root: true, type: 'object' },
 		     http: {verb: 'get', path: '/get_user_ideas' },
-		     description: 'Returns an array of ideas only without the content '
+		     description: 'Returns an array of ideas without the content '
 		   }
    );
 	Idea.remoteMethod(
