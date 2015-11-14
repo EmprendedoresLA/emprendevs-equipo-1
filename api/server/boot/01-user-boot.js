@@ -5,6 +5,7 @@
 module.exports = function(app) {
 
 	var User = app.models.User; 
+	var Idea = app.models.Idea;
 	var Person = app.models.Person;
 	var Role = app.models.Role;
 	var RoleMapping = app.models.RoleMapping;
@@ -82,7 +83,7 @@ module.exports = function(app) {
 
 	User.hasOne(Person, { foreignKey: 'user', as: 'associatedPerson'});
 	Person.hasOne(User, { foreignKey: 'person', as: 'associatedUser'});
-
+	User.hasMany(Idea, { as: 'ideas'});
 
 
 	
@@ -305,7 +306,86 @@ User.observe('after save', function(ctx, next) {
 });
 */
 
+User.beforeRemote('**', function(ctx, modelInstance, next){  
 
+	var methodString = ctx.req.remotingContext.methodString;
+
+	if( ctx.req.method === 'POST' && methodString === 'User.create' ){
+
+		var dni = ctx.req.body.dni;
+		//var email = ctx.req.body.email;
+
+		getPersonByDni( 
+			dni, 
+			function( thePerson ){
+				console.log( 'the new person:', thePerson );
+				if( thePerson.user ){
+					return next( new Error('Ya hay un usuario registrado con este DNI'));
+				};
+				return next();
+			},
+			function( err ){
+				if(err){
+					next( err );
+				}else{
+					next( new Error( 'No hay ningún alumno registrado con ese DNI'));
+				}
+			}
+			);
+	} else {
+		next();
+	};
+});
+
+
+
+User.afterRemote('**', function(ctx, modelInstance, next){  
+
+	var methodString = ctx.req.remotingContext.methodString;
+
+	if( ctx.req.method === 'POST' && methodString === 'User.create' ){
+
+		var dni = ctx.req.body.dni;
+		var userEmail = modelInstance.email;
+
+		User.findOne( 
+			{ where: { email: userEmail } }, 
+			function(err, theUser){
+				if(err){
+					next(err);
+				} else {
+					if( theUser ){
+
+						var userId = theUser.id;
+
+						getPersonByDni( 
+							dni, 
+							function( thePerson ){
+								
+								// Assign existing User to Person
+								thePerson.updateAttribute(
+									'user', userId, 
+									function(err, thePerson){
+
+										// Assign existing Person to User
+										theUser.updateAttribute(
+											'person', thePerson.id, 
+											function(err, theUser){
+												next();
+											});
+									});
+							}
+							);
+					} else {
+						next();
+					};
+				};
+			}
+			);
+	} else {
+		next();
+	};
+});
 
 
 
@@ -468,7 +548,67 @@ function getRoleCreationPermissions( userRoles ){
 
 
 
+	var getPersonByDni = function( dni, sucCb, failCb ){
 
+		Person.findOne( { where: { dni: dni } }, 
+			function(err, thePerson ){
+
+				if(err){
+					if( _.isFunction(failCb)){
+						failCb( err );
+					};
+					return;
+				};
+
+				if( !thePerson  ){
+					if( _.isFunction(failCb)){
+						failCb();
+					};
+					return;
+				} else {
+					if( _.isFunction(sucCb)){
+						sucCb( thePerson );
+					};
+					return;
+				};
+			}
+			);
+	};
+
+
+
+
+	// Person.upsert( {
+	// 	firstName: 'oki',
+	// 	fullName: 'ggg',
+	// 	dni: 123
+	// }, function(err, person){
+
+	// 	if(err){
+
+	// 		console.error( 'Error creating person:', err );
+	// 		return;
+
+	// 	};
+
+	// 	console.log( 'Created person ' + person );
+
+
+// });
+
+
+ //theUser.accessTokens.destroyAll( function(){} );
+
+//  "password": "$2a$10$wGm1ytPDOrweAMCun0i5y.7zP7GS3zcEDPb8l0ozW7enF2/D4HFIm",
+
+// User.findById('55baa77bcb9cdd8f07bfb45b', function(err, user) {
+// 	if (err) return console.error('error ur 1:', err);
+// 	user.updateAttribute('password', 'demopass', function(err, user) {
+// 		if (err) return console.error('error ur 2:', err);
+// 		console.log('> password reset processed successfully');
+
+// 	});
+// });
 
 
 User.changePassword = function( accessTokenId, newPassword, newPasswordConfirmation, cb ){
