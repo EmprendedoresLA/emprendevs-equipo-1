@@ -20,8 +20,8 @@
     ]
   },
   "mongo-ground-control": {
-    "name": "mongo-ground-control",
     "url": "mongodb://127.0.0.1:27017/ground-control-mvp",
+    "name": "mongo-ground-control",
     "connector": "loopback-connector-mongodb"
   }
 }

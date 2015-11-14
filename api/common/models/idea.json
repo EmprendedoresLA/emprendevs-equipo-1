@@ -18,7 +18,13 @@
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "owner": {
+      "type": "hasOne",
+      "model": "User",
+      "foreignKey": ""
+    }
+  },
   "acls": [],
   "methods": {}
 }
