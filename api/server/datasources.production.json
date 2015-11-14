@@ -1,0 +1,20 @@
+{
+  "memory": {
+    "name": "memory",
+    "connector": "memory"
+  },
+  "baseEmailDataSource": {
+    "name": "baseEmailDataSource",
+    "connector": "mail",
+    "transports": [
+      {
+        "type": "SMTP",
+        "host": "localhost"
+      }
+    ]
+  },
+  "mongo-ground-control": {
+    "name": "mongo-ground-control",
+    "connector": "mongodb"
+  }
+}

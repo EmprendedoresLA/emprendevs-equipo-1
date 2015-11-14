@@ -1,0 +1,27 @@
+{
+  "memory": {
+    "name": "memory",
+    "connector": "memory"
+  },
+  "baseEmailDataSource": {
+    "name": "baseEmailDataSource",
+    "connector": "mail",
+    "transports": [
+      {
+        "type": "SMTP",
+        "host": "smtp.gmail.com",
+        "secure": true,
+        "port": 465,
+        "auth": {
+          "user": "",
+          "pass": ""
+        }
+      }
+    ]
+  },
+  "mongo-ground-control": {
+    "name": "mongo-ground-control",
+    "url": "mongodb://127.0.0.1:27017/ground-control-mvp",
+    "connector": "loopback-connector-mongodb"
+  }
+}

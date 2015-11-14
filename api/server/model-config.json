@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "sources": [
+      "loopback/common/models",
+      "loopback/server/models",
+      "../common/models",
+      "./models"
+    ]
+  },
+  "User": {
+    "dataSource": "mongo-ground-control",
+    "public": true
+  },
+  "AccessToken": {
+    "dataSource": "mongo-ground-control",
+    "public": false
+  },
+  "ACL": {
+    "dataSource": "mongo-ground-control",
+    "public": false
+  },
+  "RoleMapping": {
+    "dataSource": "mongo-ground-control",
+    "public": false
+  },
+  "Role": {
+    "dataSource": "mongo-ground-control",
+    "public": true
+  },
+  "Email": {
+    "dataSource": "baseEmailDataSource"
+  },
+  "Person": {
+    "dataSource": "mongo-ground-control",
+    "public": true
+  },
+  "Int": {
+    "dataSource": null,
+    "public": true
+  },
+  "Idea": {
+    "dataSource": "mongo-ground-control",
+    "public": true
+  },
+  "Step": {
+    "dataSource": "mongo-ground-control",
+    "public": true
+  }
+}
