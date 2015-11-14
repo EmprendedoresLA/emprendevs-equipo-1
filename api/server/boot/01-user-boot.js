@@ -28,6 +28,12 @@ module.exports = function(app) {
 	//User.settings.hidden.push('id');
 
 	User.settings.strict = true;
+
+
+	User.hasOne(Person, { foreignKey: 'user', as: 'associatedPerson'});
+	Person.hasOne(User, { foreignKey: 'person', as: 'associatedUser'});
+	User.hasMany(Idea, { as: 'ideas'});
+
 	
 	// Add ACLs
 	User.settings.acls.push(
@@ -56,14 +62,25 @@ module.exports = function(app) {
 		"permission": "ALLOW",
 		"property": "changePassword",
 		"accessType": "EXECUTE"
-	}
-	,
+	},
 	{
 		"principalType": "ROLE",
 		"principalId": "$everyone",
 		"permission": "ALLOW",
 		"property": "fixDuplicates",
 		"accessType": "EXECUTE"
+	},
+	{
+		"principalType": "ROLE",
+		"principalId": "$authenticated",
+		"permission": "ALLOW",
+		"property": "__get__ideas"
+	},
+	{
+		"principalType": "ROLE",
+		"principalId": "$authenticated",
+		"permission": "ALLOW",
+		"property": "__create__ideas"
 	}
 	);
 
@@ -81,9 +98,7 @@ module.exports = function(app) {
 	};
 
 
-	User.hasOne(Person, { foreignKey: 'user', as: 'associatedPerson'});
-	Person.hasOne(User, { foreignKey: 'person', as: 'associatedUser'});
-	User.hasMany(Idea, { as: 'ideas'});
+	
 
 
 	
