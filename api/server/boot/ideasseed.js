@@ -1,6 +1,6 @@
 module.exports = function(app){
 
-	return;
+	
 
 	var async = require('async');
 	var Step = app.models.Step;
@@ -14,34 +14,58 @@ module.exports = function(app){
  	function createSeedData(){
  		
  		User.findById("564766b7fae35c3519e8549e",{include:'ideas'},function(err,res){
- 	
- 			var objectTreeIdea1 = [{body:'ir a sus oficinas y llevar mate',tree:
-	 																												[{body:'tengo que comprar yerba',tree:
-	 																																				[{body:'tengo que trabajar para comprar yerba'}]
-	 																												}]
-	 																	}];
- 			var objectTreeIdea2 = [{body:'buscar documentacion',tree:
-	 																												[{body:'aprender ingles',tree:
-	 																																				[{body:'ir a un instituto de ingles'}]
-	 																												}]
-	 																	}];
-	 		var object1Stringify = JSON.stringify(objectTreeIdea1);
-	 		var object2Stringify = JSON.stringify(objectTreeIdea2);
+ 				
+
+ 			
+  			var tree1 ={tree:[
+  					 	{content:"Inscribirse en emprendevs",tree:[]},
+  					 	{content:"Pensar el producto a desarrollar",tree:[
+  					 		{content:"Pensar el producto a desarrollar",tree:[
+  					 			{content:"Armar un modelito bien básico de negocio",tree:[
+  					 				{content:"Segmento de clientes",tree:[]},
+  					 				{content:"Propuesta de valor",tree:[]}]}]}
+  					 	]},
+  					 	{content:"Preparar el terreno",tree:[
+  					 		{content:"definir un mvp",tree:[]},
+  					 		{content:"calcular tiempos de desarrollo reales",tree:[]},
+			 				{content:"preparar espacios de trabajo",tree:[
+			 					{content:"Trello",tree:[]},
+			 					{content:"Invision",tree:[]},
+			 					{content:"Git",tree:[]},
+			 					{content:"Drive",tree:[]}
+			 				]}
+  					 	]},
+  					 	{content:"Desarrollar Ground Control",tree:[
+  					 		{content:"Armar algunos wireframes",tree:[]},
+  					 		{content:"Hackear",tree:[]}
+  					 		]
+  					 	},
+  					 	{content:"Presentar la idea a modo de ejemplo de uso del producto",tree:[]}
+  					 
+
+  					 ]};
+  					
 
 
-	 			res.ideas.create(
-	 							{'name':'robar prototipos a xeros', tree:object1Stringify
-	 																	
-	 							},function(err,res)	{
-		 			console.log(res);
-		 		});
-	 			res.ideas.create(
-	 							{'name':'aprender node', tree:object2Stringify
-	 																	
-	 							},function(err,res)	{
-		 			console.log(res);
-		 		});
+ 	 		var tree1 = JSON.stringify(tree1);
+				
+ 	 			Idea.find({filter:{ name:"Ground Control - Aplicación web"}},function(error,respuesta){
 
+ 	 				if(respuesta.length >0){
+ 	 					
+ 	 					return;
+ 	 				}
+
+
+ 					console.log("creando respuesta seed");
+		 			res.ideas.create(
+		 							{ name:"Ground Control - Aplicación web", tree:tree1
+		 																	
+		 							},function(err,res)	{
+			 			console.log(res);
+			 		});
+			 		
+	 			});
  			});	
 
 		
