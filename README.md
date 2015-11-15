@@ -1,36 +1,34 @@
-Ground Control
---------------
---------------
-**Ground** Control nos permite “*escribir*” una **idea** con **facilidad**, anotando de forma didáctica y ordenada los diferentes pasos que se necesitan para llevar adelante un plan.
+# Ground Control
 
-Usando un concepto básico (*anotador con jerarquía de pasos*) Ground Control puede capturar el proceso natural que se se da en nuestra cabeza cuando se nos ocurre una idea.
+[Ground Control](https://www.ground-control-app.com) nos permite **“escribir”** una idea con facilidad, anotando de forma didáctica y ordenada los diferentes pasos que se necesitan para llevar adelante un plan.
 
-**El cerebro piensa en jerarquía** —*tiene que suceder “tal cosa” para que suceda “tal otra”*—, y durante ese proceso hay pasos que son importantes y otros no tanto. Poder visualizar los conceptos claves —o elegir profundizar en el detalle—, evita que nuestra idea se convierta en esa serie de anotaciones largas y abrumadoras que terminan por boicotear el proceso de pensamiento.
+Usando un concepto básico **(anotador con jerarquía de pasos)** Ground Control puede capturar el proceso natural que se se da en nuestra cabeza cuando se nos ocurre una idea.
 
-Así, como contenedor, anotador y gestor inicial de ideas, Ground Control nos ofrece la forma más humana, lógica y ordenada de anotar un pensamiento.
+El cerebro piensa en jerarquía —tiene que suceder “tal cosa” para que suceda “tal otra”—, y durante ese proceso hay pasos que son importantes y otros no tanto. **Poder visualizar los conceptos claves —o elegir profundizar en el detalle—**, evita que nuestra idea se convierta en esa serie de anotaciones largas y abrumadoras que terminan por boicotear el proceso de pensamiento.
 
+Así, como **contenedor, anotador y gestor inicial de ideas**, Ground Control nos ofrece la forma más humana, lógica y ordenada de _bajar_ un pensamiento.
 
-----------
+### Features
 
-Features
------------
 - Drag and drop de los pasos de una idea
-- Archivar ideas
-- Compartir ideas con colaboradores
+- Archivar idea
+- **Compartir ideas con colaboradores**
 - Acceso rápido a visualización “plegada” o “desplegada” de grupo de pasos
 - Edición de pasos
-	- Chat interno de paso (similar al concepto de canal de Slack)
+	- **Chat interno de paso**
 	- Agregar archivos
 	- Marcar como destacado
 	- Archivar paso (marcar como realizado)
 	- Agregar recordatorio
-- Visualización de idea en línea de tiempo
+- **Visualización de idea (pasos) en línea de tiempo**
+
+### Posibilidades de Expansión
+
+Ground Control nos ofrece en un principio la posibilidad de pensar o planear una idea en forma ordenada.
+
+**La expansión más natural** es la de brindar las herramientas o condiciones necesarias para comenzar a desarrollar o ejecutar el _proyecto_ planeado, así sea con una **suit propia** de la aplicación, o bien ofreciendo **conectividad** con otras aplicaciones saas.
 
 
-----------
-**Ground Control** esta hecho con **Angular** y **Loopback**
-
-Para la estructura de arbol se uso el modulo **angular-ui-tree**
 
 
 ----------
