@@ -1,0 +1,41 @@
+<div>
+
+	<div id="content" > <!-- class="container-fluid" -->
+
+		<navbar></navbar>
+
+
+		<div class="base-layout-subnavbar">
+
+			<div class="layout-subnavbar-comodin-box">
+				
+			</div>
+
+			<div class="layout-subnavbar-content-box container-fluid">
+				
+						<statenav></statenav>
+					
+			</div>
+		</div>
+
+
+		
+		<div class="base-layout-menu-pane">
+			<!-- <menubar></menubar> -->
+			<sidebar></sidebar>
+		</div>
+
+		<div class="base-layout-body-pane">
+			<div ui-view="body" class="layout-body-view full-absolute"></div>
+
+	</div>
+
+
+	<toaster-container toaster-options="{
+	'position-class': 'toast-top-full-width',
+	'time-out': 3300
+}">
+</toaster-container>
+
+</div>
+

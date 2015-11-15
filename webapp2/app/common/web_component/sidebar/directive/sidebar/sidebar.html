@@ -1,0 +1,37 @@
+<div class="sidebar-wrapper full-absolute">
+
+	<div ng-click="doCreateIdea()" >
+		<span>
+			<i class="fa fa-plus"></i>
+		</span>
+		<span>Create Idea</span>
+	</div>
+	
+	<div class="sidebar-idea-wrapper">
+		<div class="container-fluid">
+
+			<div class="row">
+				<div class="col-xs-12">
+				<div class="row" ng-repeat="idea in ideas" ng-click="doSelectIdea( idea )">
+						<div class="col-xs-2">
+							<i class="fa fa-trash"></i>
+						</div>
+						<div class="col-xs-8">
+							<span ng-bind="idea.name"></span>
+						</div>
+						<div class="col-xs-2">
+							<i class="fa fa-edit"></i>
+						</div>
+					</div>
+				</div>	
+			</div>
+
+		</div>
+	</div>
+	
+	
+
+
+</div>
+
+
