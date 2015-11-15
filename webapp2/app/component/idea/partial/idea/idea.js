@@ -1,4 +1,4 @@
-angular.module('idea').controller('ideaCtrl',function($scope, FcSession, theIdea, $timeout, StateNavigator ){
+angular.module('idea').controller('ideaCtrl',function($scope, FcSession, theIdea, $timeout, StateNavigator, Idea ){
 
 
 	// DATA
@@ -6,7 +6,12 @@ angular.module('idea').controller('ideaCtrl',function($scope, FcSession, theIdea
 	theIdea.$promise.then(function(theIdea){
 		StateNavigator.setPageTitle( theIdea.name  );
 
-		//$scope.ideas = theIdea.tree;
+		$scope.ideas = [{
+			name: theIdea.name,
+			tree: JSON.parse(theIdea.tree || '[]')
+		}];
+
+
 	});
 
 
@@ -49,6 +54,69 @@ angular.module('idea').controller('ideaCtrl',function($scope, FcSession, theIdea
 	};
 
 
+
+
+function resetNewStep(){
+	$scope.newIdea = {
+		content: ''
+	};
+};
+
+
+
+
+$scope.addStep = function( newstepform ){
+
+	var stepContent = $scope.newIdea.content;
+
+	$scope.ideas[0].tree.push({
+		content: stepContent,
+		tree: []
+	});
+
+	$scope.saveIdea();
+
+	resetNewStep();
+
+};
+
+
+$scope.saveIdea = function(){
+
+
+	var ideaTreeStringified = JSON.stringify( $scope.ideas[0].tree );
+
+	Idea.prototype$updateAttributes({ id: theIdea.id }, { tree : ideaTreeStringified })
+	.$promise.then(function() {
+
+		console.log('succes!')
+
+	});
+
+      	// theIdea.updateAttributes({ tree : ideaTreeStringified },function(res){	
+
+
+
+      	// },function(err){
+      	// 	console.log("problemas updateando DB: "+err);
+      	// });
+};
+
+
+
+
+
+
+
+
+
+});
+
+
+
+/*
+
+
 	$scope.ideas = [
 	{name:"Ground Control - Aplicación web",
 	tree:[
@@ -81,36 +149,4 @@ angular.module('idea').controller('ideaCtrl',function($scope, FcSession, theIdea
 }
 ];
 
-
-function resetNewStep(){
-	$scope.newIdea = {
-		content: ''
-	};
-};
-
-
-
-
-$scope.addStep = function( newstepform ){
-
-	var stepContent = $scope.newIdea.content;
-
-	$scope.ideas[0].tree.push({
-		content: stepContent,
-		tree: []
-	});
-
-	resetNewStep();
-
-};
-
-
-
-
-
-
-
-
-
-
-});
+*/
