@@ -15,7 +15,7 @@
   },
   "files": {
     "loopback#static": {
-      "params": "$!../../webapp"
+      "params": "$!../../webapp2"
     }
   },
   "final:before": {
