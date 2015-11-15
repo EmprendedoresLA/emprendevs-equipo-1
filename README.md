@@ -2,6 +2,10 @@ Ground Control
 --------------
 --------------
 
+Ground control esta hecho con **Angular** y **Loopback**
+Para la estructura de arbol se uso el modulo **angular-ui-tree**
+
+
 Instalacion
 ------------------------------------------------
 
