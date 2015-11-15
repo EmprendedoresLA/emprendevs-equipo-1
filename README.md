@@ -30,7 +30,6 @@ Ground Control nos ofrece en un principio la posibilidad de pensar o planear una
 
 
 
-
 ----------
 Instalacion
 ------------------------------------------------
@@ -42,8 +41,17 @@ Instalacion
 **Ground Control** no requiere instalacion o configuracion adicional.
 
 
+---------
+
+Requisitos
+---------
+`nodejs`
+`mongo`
+
+
 Uso
 ------------------------------------------------
 > - Entrar a la carpeta api     `cd api`
 > - Iniciar servidor  `slc run`  
+
 > - Abrir la direccion `localhost:3000` en el navegador
