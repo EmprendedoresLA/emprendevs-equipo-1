@@ -14,16 +14,18 @@
 					'glyphicon-chevron-down': !collapsed
 				}"></span></a>
 				
-				<span ng-bind="step.content" ng-click="doEditStepcontent( $event, step )" data-nodrag style="max-width: 70%;" class="ellipsis">
+				<span ng-if="step.content" ng-bind="step.content" ng-click="doEditStepcontent( $event, step )" data-nodrag style="max-width: 70%;" class="ellipsis">
 				</span>
+
+				<span style="color: lightgray" ng-if="!step.content" ng-click="doEditStepcontent( $event, step )">Un paso de mi idea</span>
 				
-				<a class="pull-right btn btn-danger btn-xs idea-tree-step-remove" data-nodrag ng-click="remove(this)"><span
+				<a class="pull-right btn btn-danger btn-xs " data-nodrag ng-click="remove(this)"><span
 					class="glyphicon glyphicon-remove"></span></a>
 
-					<!--
+					
 					<a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span
 						class="glyphicon glyphicon-plus"></span></a>  
-						-->
+						
 					</div>
 
 
@@ -61,7 +63,7 @@
 					
 
 						<form class="newstepform" role="form" name="newstepform" novalidate ng-submit=" addStep( newstepform ) ">
-							<input type="text" id="newideacontent" name="newideacontent" ng-model="newIdea.content" autocomplete="false" focus-me="newIdea.getTarget ">
+							<input type="text" id="newideacontent" name="newideacontent" ng-model="newIdea.content" autocomplete="false" focus-me="newIdea.getTarget " placeholder="Escribir un paso de mi idea">
 						</form>
 
 					</div>
