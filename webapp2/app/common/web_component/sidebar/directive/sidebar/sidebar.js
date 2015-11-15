@@ -1,4 +1,4 @@
-angular.module('sidebar').directive('sidebar', function( FcConfigMenu, $state, FcSession, User ) {
+angular.module('sidebar').directive('sidebar', function( FcConfigMenu, $state, FcSession, User, StateNavigator, Idea, _ ) {
 	return {
 		restrict: 'EA',
 		replace: true,
@@ -16,43 +16,45 @@ angular.module('sidebar').directive('sidebar', function( FcConfigMenu, $state, F
 					include: 'ideas'
 				}
 			}, function( theUser ){
-					scope.ideas = theUser.ideas;
-				});
+				scope.ideas = theUser.ideas;
+			});
 
 			//scope.ideas = theUser.ideas;
 
-			console.log( theUser )
+			scope.doEditIdeaName = function( event, idea ){
+
+				event.preventDefault();
+
+				scope.ideas.forEach(function(idea){
+					idea.editName = false;
+				});
+
+				idea.editName = !!!idea.editName;
+
+				
+
+
+			};
+
+			scope.updateIdeaName = function( idea ){
+
+				idea.editName = false;
+
+				var newIdeaName = idea.name;
+
+				Idea.prototype$updateAttributes({ id: idea.id }, { name : newIdeaName })
+				.$promise.then(function() {
+
+					StateNavigator.setPageTitle( newIdeaName  );
+
+				});
+
+				
+
+			};
 			
 			
 
-
-
-			// scope.ideas = [
-			// {name: 'idea1', id: '5647521c5ca36bff2a3765a7'},
-			// {name: 'idea2', id: 'idOfidea2'},
-			// {name: 'idea2', id: 'idOfidea2'},
-			// {name: 'idea1', id: 'idOfidea1'},
-			// {name: 'idea2', id: 'idOfidea2'},
-			// {name: 'idea2', id: 'idOfidea2'},
-			// {name: 'idea1', id: 'idOfidea1'},
-			// {name: 'idea2', id: 'idOfidea2'},
-			// {name: 'idea2', id: 'idOfidea2'},
-			// {name: 'idea1', id: 'idOfidea1'},
-			// {name: 'idea2', id: 'idOfidea2'},
-			// {name: 'idea2', id: 'idOfidea2'},
-			// {name: 'idea1', id: 'idOfidea1'},
-			// {name: 'idea2', id: 'idOfidea2'},
-			// {name: 'idea2', id: 'idOfidea2'},
-			// {name: 'idea1', id: 'idOfidea1'},
-			// {name: 'idea2', id: 'idOfidea2'},
-			// {name: 'idea2', id: 'idOfidea2'},
-			// {name: 'idea1', id: 'idOfidea1'},
-			// {name: 'idea2', id: 'idOfidea2'},
-			// {name: 'idea2', id: 'idOfidea2'},
-			// {name: 'idea1', id: 'idOfidea1'},
-			// {name: 'idea2', id: 'idOfidea2'},
-			// {name: 'idea2', id: 'idOfidea2'},
-			// ];
 
 
 
@@ -68,7 +70,30 @@ angular.module('sidebar').directive('sidebar', function( FcConfigMenu, $state, F
 					{ name: 'Nueva Idea' }, function( theNewIdea ){
 						console.log('nueva idea:', theNewIdea );
 						scope.ideas.push( theNewIdea );
+
+						$state.go('idea', { ideaId: theNewIdea.id });
+						
 					});
+			};
+
+			scope.doDeleteIdea = function( event, idea ){
+
+				event.preventDefault();
+
+
+
+				Idea.deleteById( { id: idea.id } ).$promise.then(function(theIdea){
+
+					_.remove( scope.ideas, function(anIdea){
+						return anIdea.id == idea.id; 
+					});
+					
+					$state.go( 'idea' );
+
+
+				});;
+
+
 			};
 
 			// var configMenu = FcConfigMenu;

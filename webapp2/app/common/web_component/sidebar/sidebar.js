@@ -1,4 +1,4 @@
-angular.module('sidebar', ['ui.bootstrap','ui.utils','ui.router','ngAnimate']);
+angular.module('sidebar', ['ui.bootstrap','ui.utils','ui.router','ngAnimate', 'FocusMe']);
 
 angular.module('sidebar').config(function($stateProvider) {
 

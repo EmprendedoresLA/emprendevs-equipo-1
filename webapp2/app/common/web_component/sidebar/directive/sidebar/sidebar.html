@@ -12,15 +12,22 @@
 
 			<div class="row">
 				<div class="col-xs-12">
-				<div class="row" ng-repeat="idea in ideas" ng-click="doSelectIdea( idea )">
-						<div class="col-xs-2">
-							<i class="fa fa-trash"></i>
+					<div class="row sidebar-idea-list-item" ng-repeat="idea in ideas" ng-click="doSelectIdea( idea )">
+						<div class="col-xs-1">
+							<i class="fa fa-trash sidebar-idea-delete-btn" ng-click="doDeleteIdea( $event, idea )"></i>
 						</div>
-						<div class="col-xs-8">
-							<span ng-bind="idea.name"></span>
+						<div class="col-xs-9 ">
+							<div class="sidebr-idea-field-box">
+								<span ng-if="!idea.editName" ng-bind="idea.name" class="ellipsis"></span>
+
+								<form class="ideanameform" role="form" name="ideanameform" novalidate ng-submit=" updateIdeaName( idea ) ">
+									<input ng-if="idea.editName" ng-model="idea.name" type="text" focus-me="true">
+								</form>
+							</div>
+
 						</div>
-						<div class="col-xs-2">
-							<i class="fa fa-edit"></i>
+						<div class="col-xs-1">
+							<i class="fa fa-edit sidebar-idea-edit-btn" ng-click="doEditIdeaName( $event, idea )"></i>
 						</div>
 					</div>
 				</div>	

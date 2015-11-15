@@ -2,7 +2,7 @@
 
 	<script type="text/ng-template" id="nodes_renderer.html">
 		<div ui-tree-handle class="tree-node tree-node-content">
-			<a class="btn btn-success btn-xs" ng-if="step.tree && step.tree.length > 0" data-nodrag ng-click="toggle(this)"><span
+			<a class="btn btn-success btn-xs" ng-if="step.tree && step.tree.length > 0"  ng-click="toggle(this)"><span
 				class="glyphicon"
 				ng-class="{
 					'glyphicon-chevron-right': collapsed,
@@ -31,13 +31,13 @@
 				<div ui-tree class="idea-tree" > <!-- data-drag-enabled="false"  -->
 					<ul ui-tree-nodes="" ng-model="ideas" id="tree-root"  style="padding-left: 0px"  >
 
-						<li ng-repeat="idea in ideas  track by $index" ui-tree-node style="padding-left: 0px">
+						<li ng-repeat="idea in ideas " ui-tree-node style="padding-left: 0px">
 							<!-- <div ui-tree-handle data-nodrag> 
-								{{idea.name}} 
+								
 
-							</div> -->
+							</div>  -->
 							<ul ui-tree-nodes="" ng-model="idea.tree" style="padding-left: 0px">
-								<li ng-repeat="step in idea.tree  track by $index" ui-tree-node ng-include="'nodes_renderer.html'">
+								<li ng-repeat="step in idea.tree  " ui-tree-node ng-include="'nodes_renderer.html'">
 								</li>
 							</ul>
 						</li>

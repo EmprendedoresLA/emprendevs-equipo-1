@@ -7,7 +7,7 @@ angular.module('idea').controller('ideaCtrl',function($scope, FcSession, theIdea
 		StateNavigator.setPageTitle( theIdea.name  );
 
 		$scope.ideas = [{
-			name: theIdea.name,
+			//name: theIdea.name,
 			tree: JSON.parse(theIdea.tree || '[]')
 		}];
 
@@ -68,6 +68,11 @@ function resetNewStep(){
 $scope.addStep = function( newstepform ){
 
 	var stepContent = $scope.newIdea.content;
+	
+	$scope.ideas[0] = $scope.ideas[0] || [{
+			name: theIdea.name,
+			tree: JSON.parse(theIdea.tree || '[]')
+		}];
 
 	$scope.ideas[0].tree.push({
 		content: stepContent,
