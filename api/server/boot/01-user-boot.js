@@ -321,86 +321,10 @@ User.observe('after save', function(ctx, next) {
 });
 */
 
-User.beforeRemote('**', function(ctx, modelInstance, next){  
-
-	var methodString = ctx.req.remotingContext.methodString;
-
-	if( ctx.req.method === 'POST' && methodString === 'User.create' ){
-
-		var dni = ctx.req.body.dni;
-		//var email = ctx.req.body.email;
-
-		getPersonByDni( 
-			dni, 
-			function( thePerson ){
-				console.log( 'the new person:', thePerson );
-				if( thePerson.user ){
-					return next( new Error('Ya hay un usuario registrado con este DNI'));
-				};
-				return next();
-			},
-			function( err ){
-				if(err){
-					next( err );
-				}else{
-					next( new Error( 'No hay ningún alumno registrado con ese DNI'));
-				}
-			}
-			);
-	} else {
-		next();
-	};
-});
 
 
 
-User.afterRemote('**', function(ctx, modelInstance, next){  
 
-	var methodString = ctx.req.remotingContext.methodString;
-
-	if( ctx.req.method === 'POST' && methodString === 'User.create' ){
-
-		var dni = ctx.req.body.dni;
-		var userEmail = modelInstance.email;
-
-		User.findOne( 
-			{ where: { email: userEmail } }, 
-			function(err, theUser){
-				if(err){
-					next(err);
-				} else {
-					if( theUser ){
-
-						var userId = theUser.id;
-
-						getPersonByDni( 
-							dni, 
-							function( thePerson ){
-								
-								// Assign existing User to Person
-								thePerson.updateAttribute(
-									'user', userId, 
-									function(err, thePerson){
-
-										// Assign existing Person to User
-										theUser.updateAttribute(
-											'person', thePerson.id, 
-											function(err, theUser){
-												next();
-											});
-									});
-							}
-							);
-					} else {
-						next();
-					};
-				};
-			}
-			);
-	} else {
-		next();
-	};
-});
 
 
 

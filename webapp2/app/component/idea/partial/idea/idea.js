@@ -1,4 +1,4 @@
-angular.module('idea').controller('ideaCtrl',function($scope, FcSession, theIdea, $timeout, StateNavigator, Idea ){
+angular.module('idea').controller('ideaCtrl',function($scope, FcSession, theIdea, $timeout, StateNavigator, Idea, _ ){
 
 
 	// DATA
@@ -56,56 +56,77 @@ angular.module('idea').controller('ideaCtrl',function($scope, FcSession, theIdea
 
 
 
-function resetNewStep(){
-	$scope.newIdea = {
-		content: ''
+	function resetNewStep( editingTarget, content, cb ){
+		$scope.newIdea = {
+			getTarget: false,
+			editingTarget: editingTarget || false,
+			content: content || ''
+		};
+
+		if(_.isFunction(cb)){
+			cb();
+		}
 	};
-};
 
 
 
 
-$scope.addStep = function( newstepform ){
+	$scope.addStep = function( newstepform ){
 
-	var stepContent = $scope.newIdea.content;
-	
-	$scope.ideas[0] = $scope.ideas[0] || [{
-			name: theIdea.name,
-			tree: JSON.parse(theIdea.tree || '[]')
-		}];
+		var stepContent = $scope.newIdea.content;
 
-	$scope.ideas[0].tree.push({
-		content: stepContent,
-		tree: []
-	});
+		if( $scope.newIdea.editingTarget ){
 
-	$scope.saveIdea();
+			$scope.newIdea.editingTarget.content = stepContent;
 
-	resetNewStep();
+			$scope.saveIdea();
 
-};
+		} else {
 
+			
 
-$scope.saveIdea = function(){
+			$scope.ideas[0] = $scope.ideas[0] || [{
+				name: theIdea.name,
+				tree: JSON.parse(theIdea.tree || '[]')
+			}];
 
+			$scope.ideas[0].tree.push({
+				content: stepContent,
+				tree: []
+			});
 
-	var ideaTreeStringified = JSON.stringify( $scope.ideas[0].tree );
+			$scope.saveIdea();
+		};
 
-	Idea.prototype$updateAttributes({ id: theIdea.id }, { tree : ideaTreeStringified })
-	.$promise.then(function() {
+		resetNewStep();
 
-		console.log('succes!')
-
-	});
-
-      	// theIdea.updateAttributes({ tree : ideaTreeStringified },function(res){	
+	};
 
 
+	$scope.saveIdea = function(){
 
-      	// },function(err){
-      	// 	console.log("problemas updateando DB: "+err);
-      	// });
-};
+
+		var ideaTreeStringified = JSON.stringify( $scope.ideas[0].tree );
+
+		Idea.prototype$updateAttributes({ id: theIdea.id }, { tree : ideaTreeStringified })
+		.$promise.then(function() {
+
+			console.log('Saved idea, succes!')
+
+		});
+	};
+
+
+	$scope.doEditStepcontent = function( event, step ){
+
+
+		resetNewStep( step, step.content, function(){
+			$scope.newIdea.getTarget = true;
+		} );
+
+
+
+	};
 
 
 

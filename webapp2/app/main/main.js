@@ -11,7 +11,7 @@ angular.module('main')
         url: '/',
         template: '<div base-layout></div>',
         data: {
-			title: 'Mainboard',
+			title: '',
 			modulePath: modulePath,
 			auth: {
 				//role: ['admin','principal','coordinator']
