@@ -46,7 +46,7 @@
 
 							</div>  -->
 							<ul ui-tree-nodes="" ng-model="idea.tree" style="padding-left: 0px">
-								<li ng-repeat="step in idea.tree track by $index " ui-tree-node ng-include="'nodes_renderer.html'">
+								<li ng-repeat="step in idea.tree " ui-tree-node ng-include="'nodes_renderer.html'">
 								</li>
 							</ul>
 						</li>

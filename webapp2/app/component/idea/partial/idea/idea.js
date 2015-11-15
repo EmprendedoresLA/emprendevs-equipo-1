@@ -38,6 +38,7 @@ angular.module('idea').controller('ideaCtrl',function($scope, FcSession, theIdea
 	};
 
 	$scope.newSubItem = function (step) {
+		console.log(step);
 		var currentStep = step.$modelValue;
 		currentStep.tree.push({
 			content:"",
