@@ -12,18 +12,37 @@ Así, como contenedor, anotador y gestor inicial de ideas, Ground Control nos of
 
 ----------
 
+Features
+-----------
+- Drag and drop de los pasos de una idea
+- Archivar ideas
+- Compartir ideas con colaboradores
+- Acceso rápido a visualización “plegada” o “desplegada” de grupo de pasos
+- Edición de pasos
+	- Chat interno de paso (similar al concepto de canal de Slack)
+	- Agregar archivos
+	- Marcar como destacado
+	- Archivar paso (marcar como realizado)
+	- Agregar recordatorio
+- Visualización de idea en línea de tiempo
 
+
+----------
 **Ground Control** esta hecho con **Angular** y **Loopback**
 
 Para la estructura de arbol se uso el modulo **angular-ui-tree**
 
 
+----------
 Instalacion
 ------------------------------------------------
+
+
 
 > - Clonar este repositorio
 
 **Ground Control** no requiere instalacion o configuracion adicional.
+
 
 Uso
 ------------------------------------------------
