@@ -1,7 +1,7 @@
 module.exports = function(Idea) {
 
 	var TreeModel = require('tree-model');
-	var tree = new TreeModel();
+	var tree = new TreeModel({childrenPropertyName:'tree'});
 	var async = require	('async');
 	var _ = require('lodash');
  	
@@ -9,8 +9,13 @@ module.exports = function(Idea) {
  	//Devuelve una idea con sus steps completos
 	Idea.openIdea = function(ideaId,cb){
 
-		Idea.fullFill(ideaId,function(err,fullIdea){
-			return fullIdea;
+		Idea.fullFill(ideaId,function(err,stepListId){
+			if(err)
+				return cb(err,null);
+			var ideaSteps = [];
+			_.each(stepListId,function(stepId){
+
+			})
 		});
 
 		
@@ -19,15 +24,13 @@ module.exports = function(Idea) {
 	//Busca las ideas de un usuario determinado
 	//Devuelve un array de ideas, sin el contenido de cada una
 	Idea.getUserIdeas = function(userId,cb){
+		console.log("performing a request");
 		Idea.find({
 				where:{
 						userId:userId
 				},
 				filter:{
-					user:true,
-					id:true,
-					name:true,
-					createdAt:true,
+					
 					tree:false
 
 				}
@@ -39,9 +42,10 @@ module.exports = function(Idea) {
 		
 	}
 
-	Idea.createTreeObject = function createTreeModel(ideaId,cb){
+	Idea.createTreeObject = function createTreeObject(ideaId,cb){
 
 		Idea.findById(ideaId,function(err,res){
+			res.tree = JSON.parse(res.tree);
 			var ideaTreeObject = tree.parse(res);			
 			return cb(null,ideaTreeObject);
 		});
@@ -51,25 +55,29 @@ module.exports = function(Idea) {
 	//AVOID CALLBACK HELL, USE ASYNC
 	 Idea.reparentStep = function reparentStep(ideaId,stepId, newParentId,cb){
 
-	 	var step = {};
-	 	var newParent = {};
+	 	createTreeObject(ideaId,function(err,ideaTreeObject){
+	 		var step = {};
+		 	var newParent = {};
+		 	
+			//find the node in the tree
+			findStep(ideaTreeObject,stepId,function(err,res){	
+				step = res;
+				//drop the node from the tree
+				step.drop();
+
+
+				//find the new parent for the step
+				findStep(ideaTreeObject,newParentId,function(err,res){
+					
+					newParent = findStep(ideaTreeObject,newParentId);
+					//add the previous step to this new parent
+					newParent.addChild(step);
+					Idea.persistData(ideaTreeObject);	
+				})
+			});
+
+	 	})
 	 	
-		//find the node in the tree
-		findStep(ideaObject,stepId,function(err,res){	
-			step = res;
-			//drop the node from the tree
-			step.drop();
-
-
-			//find the new parent for the step
-			findStep(ideaObject,newParentId,function(err,res){
-				
-				newParent = findStep(ideaObject,newParentId);
-				//add the previous step to this new parent
-				newParent.addChild(step);
-				Idea.persistData(ideaObject);	
-			})
-		});
 		
 	}
 
@@ -92,23 +100,26 @@ module.exports = function(Idea) {
 
 	}
 
-	Idea.deleteStep = function deleteStep(ideaObject,stepId,cb){
+	Idea.deleteStep = function deleteStep(ideaId,stepId,cb){
 
-		var step = {};
-		findStep(ideaObject,stepId,function(err,res){
-			//find the node in the tree
-			step = res;
-			//drop the node from the tree
-			step.drop();
-			// now, ideaObject should haven't the step dropped before.
-			// i must to confirm this with the console in chrome.
+		createTreeObject(ideaId,function(err,ideaTreeObject){
+			var step = {};
+			findStep(ideaTreeObject,stepId,function(err,res){
+				//find the node in the tree
+				step = res;
+				//drop the node from the tree
+				step.drop();
+				// now, ideaTreeObject should haven't the step dropped before.
+				// i must to confirm this with the console in chrome.
 
-			Idea.persistData(ideaObject, function(){
-				return cb(null);	
+				Idea.persistData(ideaTreeObject, function(){
+					return cb(null);	
+				});
 			});
 		});
-		
 	}
+
+
 	Idea.persistData = function persistData(ideaObject,cb){
 		
 		var newTree = JSON.stringify(ideaObject);
@@ -126,42 +137,46 @@ module.exports = function(Idea) {
 
 	// para cambiar el orden de los nodos dentro de un objeto TreeModel
 	// se manda el root, y los objetos a ser cambiados de lugar
-	Idea.changeStepOrder = function changeStepOrder(root,stepChildA,stepChildB,cb){
+	Idea.changeStepOrder = function changeStepOrder(ideaId,stepId,stepChildA,stepChildB,cb){
+
+		createTreeObject(ideaId,function(err,ideaTreeObject){
+
+			findStep(stepId,function(err,stepObject){
+
+				var childrens = stepObject.model.tree;
+				var updatedChildrens = swapSteps(childrens,stepChildA,stepChildB);
+				var newTree = JSON.stringify(updatedChildrens);
+
+				Idea.persistData(newTree,function(err,res){
+					if (err)
+						return cb(new Error("something wrong updating tree in DB"),null);
+					return (res);
+				});
+			})
+		})
 
 
+	}
 
-		var childrens = root.model.tree;
-		var updatedChildrens = swapSteps(childrens,stepChildA,stepChildB);
-		var newTree = JSON.stringify(updatedChildrens);
-
-		Idea.persistData(newTree,function(err,res){
-			if (err)
-				return cb(new Error("something wrong updating tree in DB"),null);
-			return (res);
+	Idea.fullFill =  function fullFill(ideaId,cb){
+		//i have to do a recursive search in the idea childrens.
+		createTreeObject(ideaId,function(err,ideaTreeObject){
+			var arrayIds = [];
+			recursiveSearch(ideaTreeObject.tree,array);
+			return cb(null,arrayIds);
 		});
 	}
 
-	Idea.fullFill =  function fullFill(ideaObject){
-		//i have to do a recursive search in the idea childrens.
+	var recursiveSearch = function recursiveSearch(treeObject, listIds) {
 
+	    _.each(tree, function(item) {
+	        listIds.push(item._id);
+	        
+		         if(item.tree) recursiveSearch(item.tree,listIds);
+	    });
 
-
-
-/*
-var recursiveSearch = function recursiveSearch(treeProperty,property, listIds) {
-
-    _.each(tree, function(item) {
-        listIds.push(item[property]);
-        
-         if(item[treeProperty]) recursiveSearch(item.tree,property,listIds);
-    });
-
-    
-}
-
-
-	
-	
+	    
+	}
 
 
 /*
@@ -190,7 +205,7 @@ var recursiveSearch = function recursiveSearch(treeProperty,property, listIds) {
 	}
 */
 
-	}
+	
 
 	Idea.getSteps = function getSteps(idsArray,cb){
 		//do a bulk find to return an array of InstanceModel objects of Steps
@@ -231,7 +246,7 @@ var recursiveSearch = function recursiveSearch(treeProperty,property, listIds) {
 	    'reparentStep', 
 		    {
 		     accepts: [
-		     {arg: 'ideaObject', type: 'object', required:true},
+		     {arg: 'ideaId', type: 'string', required:true},
 		     {arg: 'stepId', type: 'string', required:true },
 		     {arg: 'newParentId', type: 'string', required:true }
 		     ],
@@ -240,7 +255,7 @@ var recursiveSearch = function recursiveSearch(treeProperty,property, listIds) {
 		     description: ''
 		   }
    );
-
+/*
    Idea.remoteMethod(
 	    'getStepPath', 
 		    {
@@ -253,7 +268,7 @@ var recursiveSearch = function recursiveSearch(treeProperty,property, listIds) {
 		     http: {verb: 'get', path: '/get_step_path' },
 		     description: ''
 		   }
-   );
+   ); */
     Idea.remoteMethod(
 	    'changeStepOrder', 
 		    {
